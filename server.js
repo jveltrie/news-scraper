@@ -1,3 +1,5 @@
+//Comment this out whenyou finally go to production
+require('dotenv').config()
 var express = require('express');
 var bodyParser = require('body-parser');
 var logger = require('morgan');
@@ -11,7 +13,7 @@ var request = require('request');
 var cheerio = require('cheerio');
 
 mongoose.Promise = Promise;
-mongoose.connect(process.env.MONGODB_URI);
+mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true });
 
 var db = mongoose.connection;
 
@@ -42,12 +44,15 @@ db.once("open", function(){
 });
 
 app.get("/", function(req,res){
-	Article.find({"saved": false}).limit(20).exec(function(error,data){
+	console.log('route hit')
+	Article.find({}).then(function(data){
 		var hbsObject = {
 			article: data
 		};
 		console.log(hbsObject);
 		res.render("index", hbsObject);
+	}).catch(function(err){
+		console.log(err);
 	});
 });
 
@@ -63,11 +68,13 @@ app.get("/saved", function(req,res){
 app.get("/scrape", function(req,res){
 	request("https://www.nytimes.com/", function(error,response, html){
 		var $ = cheerio.load(html);
+		
 		$("article").each(function(i,element){
+			console.log(element);
 			var result = {};
-			result.title = $(this).children("h2").text();
-			result.summary = $(this).children(".summary").text();
-			result.link = $(this).children("h2").children("a").attr("href");
+			result.title = element.children("h2").text();
+			result.summary = element.children(".summary").text();
+			result.link = element.children("h2").children("a").attr("href");
 
 			var entry = new Article(result);
 

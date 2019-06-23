@@ -11,7 +11,7 @@ var request = require('request');
 var cheerio = require('cheerio');
 
 mongoose.Promise = Promise;
-mongoose.connect("mongodb://heroku_xd394bdd:ncntvcs1jnacmt48iaiodvflb7@ds161016.mlab.com:61016/heroku_xd394bdd" , {
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://heroku_r4gnl55s:ikk145077rglusb3u9o1jqu4dn@ds341837.mlab.com:41837/heroku_r4gnl55s' , {
 	useMongoClient: true
 });
 

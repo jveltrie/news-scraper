@@ -11,9 +11,7 @@ var request = require('request');
 var cheerio = require('cheerio');
 
 mongoose.Promise = Promise;
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://heroku_r4gnl55s:ikk145077rglusb3u9o1jqu4dn@ds341837.mlab.com:41837/heroku_r4gnl55s' , {
-	useMongoClient: true
-});
+mongoose.connect(process.env.MONGODB_URI);
 
 var db = mongoose.connection;
 
